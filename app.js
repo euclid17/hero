@@ -4,12 +4,12 @@ import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc } 
 
 // TODO: 아래에 Firebase 프로젝트 설정 정보를 붙여넣으세요!
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBJSwKntv5_ot7DoBkEdc15UT71WDbNwC0",
+  authDomain: "hero-4-3.firebaseapp.com",
+  projectId: "hero-4-3",
+  storageBucket: "hero-4-3.firebasestorage.app",
+  messagingSenderId: "540688657991",
+  appId: "1:540688657991:web:68f368572b91b3d3d68b62"
 };
 
 let appInstance = null;
