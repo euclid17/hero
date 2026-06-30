@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>용사 키우기</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div id="app">
+        <!-- View: Login / Role Selection -->
+        <div id="view-login" class="view active">
+            <div class="panel login-panel">
+                <h1 class="game-title">용사 키우기</h1>
+                <p class="subtitle">당신의 역할을 선택하세요</p>
+                <div id="role-selection">
+                    <button class="btn btn-primary" onclick="app.showLogin('teacher')">교사 로그인</button>
+                    <button class="btn btn-secondary" onclick="app.showLogin('student')">학생 접속</button>
+                </div>
+                
+                <!-- Email/Password Login Form -->
+                <div id="auth-form" class="hidden" style="margin-top: 20px; border-top: 3px dashed var(--panel-border); padding-top: 20px;">
+                    <h3 id="auth-title">로그인</h3>
+                    <input type="email" id="auth-email" class="input-text" placeholder="이메일" style="width:100%; margin-bottom:10px;">
+                    <input type="password" id="auth-password" class="input-text" placeholder="비밀번호" style="width:100%; margin-bottom:10px;">
+                    
+                    <!-- Only for student signup -->
+                    <div id="signup-extra" class="hidden">
+                        <input type="text" id="auth-name" class="input-text" placeholder="이름 (학생용)" style="width:100%; margin-bottom:10px;">
+                        <div class="gender-select" style="margin-bottom:10px;">
+                            <label><input type="radio" name="auth-gender" value="male" checked> 남</label>
+                            <label><input type="radio" name="auth-gender" value="female"> 여</label>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; justify-content: center;">
+                        <button class="btn btn-primary" id="auth-submit-btn" onclick="app.submitAuth()">로그인</button>
+                        <button class="btn btn-secondary" id="auth-toggle-btn" onclick="app.toggleAuthMode()">회원가입하기</button>
+                    </div>
+                    <button class="btn btn-small" style="margin-top:15px; width:100%" onclick="app.showRoleSelection()">뒤로가기</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Teacher Dashboard -->
+        <div id="view-teacher" class="view">
+            <header class="game-header">
+                <h2>교사 대시보드</h2>
+                <button class="btn btn-small" onclick="app.logout()">종료</button>
+            </header>
+            
+            <div class="teacher-controls panel">
+                <h3>학생 포인트 관리</h3>
+                <div class="eval-actions">
+                    <button class="btn btn-eval" onclick="app.givePoints(1, '숙제 완료')">숙제 (+1점)</button>
+                    <button class="btn btn-eval" onclick="app.givePoints(1, '태도 우수')">태도 (+1점)</button>
+                    <button class="btn btn-eval" onclick="app.givePoints(-1, '태도 불량')">태도 (-1점)</button>
+                    <div class="custom-eval">
+                        <input type="number" id="custom-point" class="input-number" value="10" style="width: 60px;">
+                        <input type="text" id="custom-reason" class="input-text" placeholder="사유 입력 (예: 발표)">
+                        <button class="btn btn-secondary" onclick="app.giveCustomPoints()">부여</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="student-list panel">
+                <div class="list-header">
+                    <span><input type="checkbox" id="check-all" onclick="app.toggleCheckAll()"></span>
+                    <span>이름</span>
+                    <span>직업 (상태)</span>
+                    <span>EXP</span>
+                </div>
+                <div id="student-rows">
+                    <!-- Student rows will be injected here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Student Dashboard -->
+        <div id="view-student" class="view">
+            <header class="game-header">
+                <h2>내 상태창</h2>
+                <button class="btn btn-small" onclick="app.logout()">로그아웃</button>
+            </header>
+
+            <div class="student-main">
+                <div class="character-display panel">
+                    <h3 id="student-display-name">이름</h3>
+                    <div class="character-image-container">
+                        <!-- We use CSS classes (egg, basic, evo, final) to show different stages -->
+                        <div id="character-sprite" class="sprite egg"></div>
+                    </div>
+                    <div class="job-badge" id="job-badge">기사</div>
+                    <div class="stage-badge" id="stage-badge">알 (1단계)</div>
+                </div>
+
+                <div class="status-panel panel">
+                    <h3>성장 게이지</h3>
+                    <div class="exp-bar-container">
+                        <div class="exp-bar-fill" id="exp-bar"></div>
+                        <div class="exp-text" id="exp-text">0 / 100</div>
+                    </div>
+                    <div class="next-unlock" id="next-unlock">다음 직업: 마법사</div>
+                    
+                    <h3 style="margin-top:20px;">모험 기록</h3>
+                    <div class="history-log" id="history-log">
+                        <!-- Points history -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="app.js"></script>
+</body>
+</html>
