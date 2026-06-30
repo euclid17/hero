@@ -104,9 +104,8 @@ window.app = {
         document.getElementById('auth-toggle-btn').innerText = '회원가입하기';
         
         // Reset fields
-        document.getElementById('auth-email').value = '';
+        document.getElementById('auth-nickname').value = '';
         document.getElementById('auth-password').value = '';
-        document.getElementById('auth-name').value = '';
     },
 
     toggleAuthMode() {
@@ -128,21 +127,20 @@ window.app = {
     },
 
     async submitAuth() {
-        const email = document.getElementById('auth-email').value.trim();
+        const nickname = document.getElementById('auth-nickname').value.trim();
         const password = document.getElementById('auth-password').value;
         
-        if (!email || !password) {
-            alert('이메일과 비밀번호를 입력해주세요.');
+        if (!nickname || !password) {
+            alert('닉네임(아이디)과 비밀번호를 입력해주세요.');
             return;
         }
 
+        // Firebase Auth requires email format, so we create a dummy email
+        const email = nickname + '@hero.local';
+
         try {
             if (currentMode === 'signup') {
-                let name = targetAuthRole === 'teacher' ? '교사' : document.getElementById('auth-name').value.trim();
-                if (targetAuthRole === 'student' && !name) {
-                    alert('이름을 입력해주세요.');
-                    return;
-                }
+                const name = targetAuthRole === 'teacher' ? '교사' : nickname;
                 const gender = targetAuthRole === 'student' ? document.querySelector('input[name="auth-gender"]:checked').value : 'none';
 
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
