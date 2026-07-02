@@ -13,9 +13,9 @@
             <div class="panel login-panel">
                 <h1 class="game-title">용사 키우기</h1>
                 <p class="subtitle">당신의 역할을 선택하세요</p>
-                <div id="role-selection">
-                    <button class="btn btn-primary" onclick="app.showLogin('teacher')">교사 로그인</button>
-                    <button class="btn btn-secondary" onclick="app.showLogin('student')">학생 접속</button>
+                <div id="role-selection" style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="app.showLogin('teacher')">교사</button>
+                    <button class="btn btn-secondary" onclick="app.showLogin('student')">학생</button>
                 </div>
                 
                 <!-- Email/Password Login Form -->
@@ -52,25 +52,24 @@
             <div class="teacher-controls panel">
                 <h3>학생 포인트 관리</h3>
                 <div class="eval-actions">
-                    <button class="btn btn-eval" onclick="app.givePoints(1, '숙제 완료')">숙제 (+1점)</button>
-                    <button class="btn btn-eval" onclick="app.givePoints(1, '태도 우수')">태도 (+1점)</button>
-                    <button class="btn btn-eval" onclick="app.givePoints(-1, '태도 불량')">태도 (-1점)</button>
-                    <div class="custom-eval">
-                        <input type="number" id="custom-point" class="input-number" value="10" style="width: 60px;">
-                        <input type="text" id="custom-reason" class="input-text" placeholder="사유 입력 (예: 발표)">
-                        <button class="btn btn-secondary" onclick="app.giveCustomPoints()">부여</button>
-                    </div>
+                    <!-- Custom and default buttons will be rendered here by JS -->
+                </div>
+                <div class="custom-eval" style="margin-top: 15px;">
+                    <input type="number" id="custom-point" class="input-number" value="10" style="width: 60px;">
+                    <input type="text" id="custom-reason" class="input-text" placeholder="사유 입력 (예: 발표)">
+                    <button class="btn btn-secondary" onclick="app.giveCustomPoints()">부여</button>
+                    <button class="btn btn-small" style="background-color: #9b59b6; color: white; padding: 10px 15px; font-size: 1rem; border: 3px solid #000; border-radius: 5px; cursor: pointer; font-weight: bold; box-shadow: inset 2px 2px 0 rgba(255,255,255,0.4), inset -2px -2px 0 rgba(0,0,0,0.2), 2px 2px 0 rgba(0,0,0,0.5);" onclick="app.saveCustomButton()">+ 버튼 추가</button>
                 </div>
             </div>
 
             <div class="student-list panel">
-                <div class="list-header">
-                    <span><input type="checkbox" id="check-all" onclick="app.toggleCheckAll()"></span>
-                    <span>이름</span>
-                    <span>직업 (상태)</span>
-                    <span>EXP</span>
+                <div class="list-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--panel-border); padding-bottom: 10px; margin-bottom: 15px;">
+                    <h3 style="margin: 0; border: none; padding: 0;">학생 목록</h3>
+                    <label style="cursor: pointer; font-weight: bold;">
+                        <input type="checkbox" id="check-all" onclick="app.toggleCheckAll()"> 전체 선택
+                    </label>
                 </div>
-                <div id="student-rows">
+                <div id="student-rows" class="student-grid">
                     <!-- Student rows will be injected here -->
                 </div>
             </div>
@@ -109,6 +108,10 @@
                 </div>
             </div>
         </div>
+        
+        <footer style="text-align: center; margin-top: 30px; color: #555; font-size: 1rem; font-weight: bold;">
+            서울수리초등학교 양수빈
+        </footer>
     </div>
     
     <script type="module" src="app.js"></script>
