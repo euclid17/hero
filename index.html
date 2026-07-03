@@ -31,6 +31,7 @@
                             <label><input type="radio" name="auth-gender" value="male" checked> 남</label>
                             <label><input type="radio" name="auth-gender" value="female"> 여</label>
                         </div>
+                        <input type="text" id="auth-student-invite-code" class="input-text" placeholder="학급 초대 코드 (필수)" style="width:100%; margin-bottom:10px;">
                     </div>
                     
                     <!-- Only for teacher signup -->
@@ -54,28 +55,46 @@
                 <button class="btn btn-small" onclick="app.logout()">종료</button>
             </header>
             
-            <div class="teacher-controls panel">
-                <h3>학생 포인트 관리</h3>
-                <div class="eval-actions">
-                    <!-- Custom and default buttons will be rendered here by JS -->
-                </div>
-                <div class="custom-eval" style="margin-top: 15px;">
-                    <input type="number" id="custom-point" class="input-number" value="10" style="width: 60px;">
-                    <input type="text" id="custom-reason" class="input-text" placeholder="사유 입력 (예: 발표)">
-                    <button class="btn btn-secondary" onclick="app.giveCustomPoints()">부여</button>
-                    <button class="btn btn-small" style="background-color: #9b59b6; color: white; padding: 10px 15px; font-size: 1rem; border: 3px solid #000; border-radius: 5px; cursor: pointer; font-weight: bold; box-shadow: inset 2px 2px 0 rgba(255,255,255,0.4), inset -2px -2px 0 rgba(0,0,0,0.2), 2px 2px 0 rgba(0,0,0,0.5);" onclick="app.saveCustomButton()">+ 버튼 추가</button>
-                </div>
+            <!-- Class Management UI -->
+            <div id="teacher-class-setup" class="panel hidden" style="text-align: center; margin-bottom: 20px;">
+                <h3>내 학급 만들기</h3>
+                <p style="margin-bottom: 15px;">운영 중인 학급이 없습니다. 학급 이름을 입력하고 학생들을 초대하세요!</p>
+                <input type="text" id="new-class-name" class="input-text" placeholder="학급 이름 (예: 수리초 6학년 1반)" style="width: 80%; max-width: 300px; margin-bottom: 10px;">
+                <br>
+                <button class="btn btn-primary" onclick="app.createClass()">학급 생성 및 초대코드 발급</button>
             </div>
 
-            <div class="student-list panel">
-                <div class="list-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--panel-border); padding-bottom: 10px; margin-bottom: 15px;">
-                    <h3 style="margin: 0; border: none; padding: 0;">학생 목록</h3>
-                    <label style="cursor: pointer; font-weight: bold;">
-                        <input type="checkbox" id="check-all" onclick="app.toggleCheckAll()"> 전체 선택
-                    </label>
+            <div id="teacher-class-info" class="panel hidden" style="margin-bottom: 20px; background-color: rgba(255, 215, 0, 0.1); border-color: #ffd700;">
+                <h3 id="display-class-name" style="margin-top: 0; color: #d35400;">학급 이름</h3>
+                <p style="font-size: 1.1rem; margin-bottom: 0;">
+                    가입용 초대 코드: <strong id="display-invite-code" style="font-size: 1.4rem; color: #e74c3c; user-select: all; cursor: pointer;" title="더블 클릭하여 복사"></strong>
+                </p>
+            </div>
+
+            <div id="teacher-dashboard-main" class="hidden">
+                <div class="teacher-controls panel">
+                    <h3>학생 포인트 관리</h3>
+                    <div class="eval-actions">
+                        <!-- Custom and default buttons will be rendered here by JS -->
+                    </div>
+                    <div class="custom-eval" style="margin-top: 15px;">
+                        <input type="number" id="custom-point" class="input-number" value="10" style="width: 60px;">
+                        <input type="text" id="custom-reason" class="input-text" placeholder="사유 입력 (예: 발표)">
+                        <button class="btn btn-secondary" onclick="app.giveCustomPoints()">부여</button>
+                        <button class="btn btn-small" style="background-color: #9b59b6; color: white; padding: 10px 15px; font-size: 1rem; border: 3px solid #000; border-radius: 5px; cursor: pointer; font-weight: bold; box-shadow: inset 2px 2px 0 rgba(255,255,255,0.4), inset -2px -2px 0 rgba(0,0,0,0.2), 2px 2px 0 rgba(0,0,0,0.5);" onclick="app.saveCustomButton()">+ 버튼 추가</button>
+                    </div>
                 </div>
-                <div id="student-rows" class="student-grid">
-                    <!-- Student rows will be injected here -->
+
+                <div class="student-list panel">
+                    <div class="list-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--panel-border); padding-bottom: 10px; margin-bottom: 15px;">
+                        <h3 style="margin: 0; border: none; padding: 0;">학생 목록</h3>
+                        <label style="cursor: pointer; font-weight: bold;">
+                            <input type="checkbox" id="check-all" onclick="app.toggleCheckAll()"> 전체 선택
+                        </label>
+                    </div>
+                    <div id="student-rows" class="student-grid">
+                        <!-- Student rows will be injected here -->
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { policies } from "./policies.js";
 
 // TODO: 아래에 Firebase 프로젝트 설정 정보를 붙여넣으세요!
@@ -44,6 +44,7 @@ let studentsUnsubscribe = null;
 let teacherUnsubscribe = null;
 let currentMode = 'login'; // 'login' or 'signup'
 let targetAuthRole = null; // 'teacher' or 'student'
+let currentClassId = null; // To store teacher's class ID or student's class ID
 
 // --- UI Logic ---
 window.app = {
@@ -169,6 +170,20 @@ window.app = {
                         return;
                     }
                 }
+                
+                if (targetAuthRole === 'student') {
+                    const inviteCode = document.getElementById('auth-student-invite-code').value.trim();
+                    if (!inviteCode) {
+                        alert('학급 초대 코드를 입력해주세요.');
+                        return;
+                    }
+                    const classDoc = await getDoc(doc(db, "classes", inviteCode));
+                    if (!classDoc.exists()) {
+                        alert('유효하지 않은 초대 코드입니다. 다시 확인해주세요.');
+                        return;
+                    }
+                    currentClassId = inviteCode;
+                }
 
                 const name = targetAuthRole === 'teacher' ? '교사' : nickname;
                 const gender = targetAuthRole === 'student' ? document.querySelector('input[name="auth-gender"]:checked').value : 'none';
@@ -177,7 +192,7 @@ window.app = {
                 const user = userCredential.user;
                 
                 // Create document in Firestore
-                await setDoc(doc(db, "users", user.uid), {
+                const userData = {
                     email: email,
                     name: name,
                     gender: gender,
@@ -185,7 +200,12 @@ window.app = {
                     points: 0,
                     jobIndex: 0,
                     history: []
-                });
+                };
+                if (targetAuthRole === 'student') {
+                    userData.classId = currentClassId;
+                }
+                
+                await setDoc(doc(db, "users", user.uid), userData);
                 
                 alert('환영합니다! 가입 완료되었습니다.');
             } else {
@@ -232,7 +252,7 @@ window.app = {
     },
 
     // --- Teacher Actions ---
-    startTeacherListener() {
+    async startTeacherListener() {
         const container = document.getElementById('student-rows');
         
         // Listen to teacher's own document for custom buttons
@@ -244,17 +264,39 @@ window.app = {
             }
         });
         
-        // Listen to all students changes in real-time
-        studentsUnsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
-            if (!document.getElementById('view-teacher').classList.contains('active')) return;
+        // Check for teacher's class
+        const qClass = query(collection(db, "classes"), where("teacherId", "==", currentUserData.id));
+        const classDocs = await getDocs(qClass);
+        
+        if (classDocs.empty) {
+            document.getElementById('teacher-class-setup').classList.remove('hidden');
+            document.getElementById('teacher-class-info').classList.add('hidden');
+            document.getElementById('teacher-dashboard-main').classList.add('hidden');
+        } else {
+            const classDoc = classDocs.docs[0];
+            currentClassId = classDoc.id;
+            const classData = classDoc.data();
+            
+            document.getElementById('teacher-class-setup').classList.add('hidden');
+            document.getElementById('teacher-class-info').classList.remove('hidden');
+            document.getElementById('teacher-dashboard-main').classList.remove('hidden');
+            document.getElementById('display-class-name').innerText = classData.className;
+            document.getElementById('display-invite-code').innerText = currentClassId;
+            
+            // Listen to all students in this class in real-time
+            const qStudents = query(collection(db, "users"), where("role", "==", "student"), where("classId", "==", currentClassId));
+            
+            if (studentsUnsubscribe) {
+                studentsUnsubscribe(); // Unsubscribe previous if exists
+            }
+            
+            studentsUnsubscribe = onSnapshot(qStudents, (snapshot) => {
+                if (!document.getElementById('view-teacher').classList.contains('active')) return;
 
-            const students = [];
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                if (data.role === 'student') {
-                    students.push({ id: doc.id, ...data });
-                }
-            });
+                const students = [];
+                snapshot.forEach(doc => {
+                    students.push({ id: doc.id, ...doc.data() });
+                });
             
             // Save current checked state
             const checkedState = {};
@@ -278,11 +320,36 @@ window.app = {
             });
             container.innerHTML = html;
         });
+        }
     },
 
     toggleCheckAll() {
         const checkAll = document.getElementById('check-all').checked;
         document.querySelectorAll('.student-check').forEach(el => el.checked = checkAll);
+    },
+
+    async createClass() {
+        const className = document.getElementById('new-class-name').value.trim();
+        if (!className) {
+            alert('학급 이름을 입력해주세요.');
+            return;
+        }
+        
+        const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+        
+        try {
+            await setDoc(doc(db, "classes", inviteCode), {
+                teacherId: currentUserData.id,
+                className: className,
+                createdAt: new Date().toISOString()
+            });
+            alert(`학급이 생성되었습니다! 초대 코드: ${inviteCode}`);
+            // Reload teacher view
+            this.startTeacherListener();
+        } catch (e) {
+            console.error("Error creating class:", e);
+            alert("학급 생성 중 오류가 발생했습니다. 권한 설정을 확인하세요.");
+        }
     },
 
     async givePoints(amount, reason) {
