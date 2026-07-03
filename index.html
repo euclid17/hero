@@ -109,9 +109,28 @@
             </div>
         </div>
         
-        <footer style="text-align: center; margin-top: 30px; color: #555; font-size: 1rem; font-weight: bold;">
-            서울수리초등학교 양수빈
+        <footer class="site-footer">
+            <div class="footer-links">
+                <a href="javascript:void(0)" onclick="app.showModal('terms')">이용약관</a>
+                <span class="divider">|</span>
+                <a href="javascript:void(0)" onclick="app.showModal('privacy')">개인정보처리방침</a>
+            </div>
+            <div class="footer-info">
+                정보관리책임자: 양수빈 교사 (서울수리초등학교)<br>
+                &copy; 2026 용사 키우기. All rights reserved.
+            </div>
         </footer>
+
+        <!-- Info Modal -->
+        <div id="info-modal" class="modal">
+            <div class="modal-content panel">
+                <span class="close-btn" onclick="app.closeModal()">&times;</span>
+                <h2 id="modal-title" class="game-header" style="margin-top: 0; margin-bottom: 20px;">제목</h2>
+                <div id="modal-body" class="modal-body-content">
+                    내용
+                </div>
+            </div>
+        </div>
     </div>
     
     <script type="module" src="app.js"></script>

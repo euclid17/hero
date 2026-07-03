@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { policies } from "./policies.js";
 
 // TODO: 아래에 Firebase 프로젝트 설정 정보를 붙여넣으세요!
 const firebaseConfig = {
@@ -487,7 +488,26 @@ window.app = {
             return `<div class="log-entry ${isPos ? 'positive' : 'negative'}">[${h.time}] ${h.text}</div>`;
         }).join('');
         document.getElementById('history-log').innerHTML = logHtml;
+    },
+
+    // --- Modal Logic ---
+    showModal(type) {
+        document.getElementById('modal-title').innerText = type === 'terms' ? '이용약관' : '개인정보처리방침';
+        document.getElementById('modal-body').innerHTML = policies[type];
+        document.getElementById('info-modal').style.display = 'block';
+    },
+
+    closeModal() {
+        document.getElementById('info-modal').style.display = 'none';
     }
 };
+
+// 모달 외부 클릭 시 닫기
+window.onclick = function(event) {
+    const modal = document.getElementById('info-modal');
+    if (event.target === modal) {
+        app.closeModal();
+    }
+}
 
 window.onload = () => app.init();
