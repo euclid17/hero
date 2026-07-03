@@ -113,6 +113,9 @@ window.app = {
         document.getElementById('role-selection').classList.add('hidden');
         document.getElementById('auth-form').classList.remove('hidden');
         document.getElementById('signup-extra').classList.add('hidden');
+        if (document.getElementById('teacher-signup-extra')) {
+            document.getElementById('teacher-signup-extra').classList.add('hidden');
+        }
         
         document.getElementById('auth-title').innerText = role === 'teacher' ? '교사 로그인' : '학생 로그인';
         document.getElementById('auth-submit-btn').innerText = '로그인';
@@ -134,8 +137,10 @@ window.app = {
             
             if (targetAuthRole === 'student') {
                 document.getElementById('signup-extra').classList.remove('hidden');
+                document.getElementById('teacher-signup-extra').classList.add('hidden');
             } else {
                 document.getElementById('signup-extra').classList.add('hidden');
+                document.getElementById('teacher-signup-extra').classList.remove('hidden');
             }
         } else {
             currentMode = 'login';
@@ -157,6 +162,14 @@ window.app = {
 
         try {
             if (currentMode === 'signup') {
+                if (targetAuthRole === 'teacher') {
+                    const teacherCode = document.getElementById('auth-teacher-code').value.trim();
+                    if (teacherCode !== '20260703') {
+                        alert('교사 인증 코드가 올바르지 않습니다.');
+                        return;
+                    }
+                }
+
                 const name = targetAuthRole === 'teacher' ? '교사' : nickname;
                 const gender = targetAuthRole === 'student' ? document.querySelector('input[name="auth-gender"]:checked').value : 'none';
 

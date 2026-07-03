@@ -33,6 +33,11 @@
                         </div>
                     </div>
                     
+                    <!-- Only for teacher signup -->
+                    <div id="teacher-signup-extra" class="hidden" style="margin-bottom:10px;">
+                        <input type="text" id="auth-teacher-code" class="input-text" placeholder="교사 인증 코드 (8자리)" style="width:100%;">
+                    </div>
+                    
                     <div style="display: flex; gap: 10px; justify-content: center;">
                         <button class="btn btn-primary" id="auth-submit-btn" onclick="app.submitAuth()">로그인</button>
                         <button class="btn btn-secondary" id="auth-toggle-btn" onclick="app.toggleAuthMode()">회원가입하기</button>
