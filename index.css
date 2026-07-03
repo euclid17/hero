@@ -1,4 +1,5 @@
 @import url('https://cdn.jsdelivr.net/gh/MonadABXY/mona-font/web/mona.css');
+@import url('https://cdn.jsdelivr.net/gh/neodgm/neodgm-webfont@1.530/neodgm/style.css');
 
 @font-face {
     font-family: 'DosGothic';
@@ -8,25 +9,26 @@
 }
 
 :root {
-    --bg-color: #f4eedd;
-    --panel-bg: #d0b894; /* Wood */
-    --panel-border: #6a4423; /* Darker Wood */
-    --panel-highlight: #e6cca5;
+    --bg-color: #f0e2cd; /* 밝은 양피지/모래색 */
+    --panel-bg: #dccba6; /* 나무색/오래된 종이색 */
+    --panel-border: #4a3018; /* 아주 짙은 흙/나무색 */
+    --panel-highlight: #eedfc5;
     
-    --btn-primary: #5c9c38; /* Earthy Green */
-    --btn-primary-dark: #3e7323;
-    --btn-secondary: #d79b47; /* Warm Wood/Tan */
-    --btn-secondary-dark: #b0772f;
+    --btn-primary: #3a86ff; /* 메이플 느낌의 밝은 파란색 */
+    --btn-primary-dark: #2a63bf;
+    --btn-secondary: #ffbe0b; /* 노란색/금색 */
+    --btn-secondary-dark: #cc9809;
+    --btn-danger: #ff006e; /* 빨간색 포인트 */
     
-    --exp-fill: #4caf50;
-    --exp-bg: #2c3e50;
+    --exp-fill: #3a86ff;
+    --exp-bg: #1d3557;
     
-    --text-color: #2c3e50;
+    --text-color: #1a1a1a;
 }
 
 * {
     box-sizing: border-box;
-    font-family: 'DosGothic', sans-serif;
+    font-family: 'NeoDunggeunmo', 'DosGothic', sans-serif;
 }
 
 body {
@@ -62,55 +64,66 @@ body {
 .panel {
     background-color: var(--panel-bg);
     border: 4px solid var(--panel-border);
-    border-radius: 6px;
+    border-radius: 0;
     padding: 20px;
-    box-shadow: inset 2px 2px 0 var(--panel-highlight), 
-                inset -2px -2px 0 rgba(0,0,0,0.2), 
-                4px 4px 0 rgba(0,0,0,0.3);
+    box-shadow: inset 3px 3px 0 var(--panel-highlight), 
+                inset -3px -3px 0 rgba(0,0,0,0.2), 
+                6px 6px 0 rgba(0,0,0,0.8);
     margin-bottom: 20px;
+    position: relative;
 }
+
+/* 나무 못 장식 (네 모서리) */
+.panel::before, .panel::after {
+    content: ''; position: absolute; width: 6px; height: 6px; background-color: #2c1a0c; border-radius: 0;
+}
+.panel::before { top: 6px; left: 6px; box-shadow: calc(100% - 12px) 0 0 #2c1a0c; } /* 이건 안되므로 다른 방식으로 하거나 생략 */
 
 .game-title {
     text-align: center;
-    font-family: 'Mona10', sans-serif;
+    font-family: 'Mona10', 'NeoDunggeunmo', sans-serif;
     font-size: 3.5rem;
-    color: #ffd700;
-    -webkit-text-stroke: 2px #000;
+    color: #ffbe0b;
+    -webkit-text-stroke: 3px var(--panel-border);
     text-shadow: 4px 4px 0 #000;
     margin-bottom: 10px;
     font-weight: 900;
 }
 
-.subtitle { text-align: center; font-weight: bold; font-size: 1.2rem; }
+.subtitle { text-align: center; font-size: 1.2rem; color: var(--panel-border); font-weight: bold; }
 
 /* Buttons */
 .btn {
     padding: 10px 20px;
     font-size: 1.1rem;
-    font-weight: bold;
-    border: 3px solid #000;
-    border-radius: 5px;
+    border: 3px solid var(--panel-border);
+    border-radius: 0; /* 픽셀 느낌을 위해 직각 */
     cursor: pointer;
-    transition: all 0.1s;
-    box-shadow: inset 2px 2px 0 rgba(255,255,255,0.4), 
-                inset -2px -2px 0 rgba(0,0,0,0.2),
-                2px 2px 0 rgba(0,0,0,0.5);
+    transition: transform 0.1s, box-shadow 0.1s;
+    box-shadow: inset 3px 3px 0 rgba(255,255,255,0.4), 
+                inset -3px -3px 0 rgba(0,0,0,0.3),
+                4px 4px 0 #000;
     color: white;
-    text-shadow: 1px 1px 0 #000;
+    text-shadow: 2px 2px 0 var(--panel-border);
 }
 .btn:active {
-    transform: translateY(2px);
-    box-shadow: inset 2px 2px 0 rgba(0,0,0,0.2), 
-                inset -2px -2px 0 rgba(255,255,255,0.4),
-                0px 0px 0 rgba(0,0,0,0.5);
+    transform: translateY(4px);
+    box-shadow: inset 3px 3px 0 rgba(0,0,0,0.3), 
+                inset -3px -3px 0 rgba(255,255,255,0.4),
+                0px 0px 0 #000;
 }
 .btn-primary { background-color: var(--btn-primary); }
 .btn-primary:hover { background-color: var(--btn-primary-dark); }
 .btn-secondary { background-color: var(--btn-secondary); }
 .btn-secondary:hover { background-color: var(--btn-secondary-dark); }
-.btn-small { padding: 5px 10px; font-size: 0.9rem; border-width: 2px; }
-.btn-eval { background-color: #9b59b6; }
-.btn-eval:hover { background-color: #8e44ad; }
+.btn-small { padding: 6px 12px; font-size: 0.9rem; border-width: 2px; }
+.btn-eval { background-color: #ff006e; }
+.btn-eval:hover { background-color: #cc0058; }
+
+.long-text {
+    font-family: 'DosGothic', sans-serif;
+    line-height: 1.6;
+}
 
 /* Forms */
 .input-text, .input-number {
@@ -148,25 +161,43 @@ h3 { margin-top: 0; border-bottom: 2px solid var(--panel-border); padding-bottom
 .custom-eval { display: flex; gap: 5px; align-items: center; background: rgba(255,255,255,0.3); padding: 8px; border-radius: 4px; border: 2px solid rgba(0,0,0,0.1);}
 
 .student-grid {
+    background-color: #7b4a25; /* 짙은 나무 게시판 색상 */
+    border: 8px solid var(--panel-border); /* 두꺼운 프레임 */
+    border-radius: 0;
+    padding: 20px;
+    box-shadow: inset 5px 5px 10px rgba(0,0,0,0.6), 4px 4px 0 rgba(0,0,0,0.3);
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 15px;
+    gap: 20px;
+    position: relative;
 }
 
 .student-card {
-    background-color: rgba(255,255,255,0.5);
-    border: 3px solid var(--panel-border);
-    border-radius: 8px;
+    background-color: #fbf0d9; /* 양피지 종이 색상 */
+    border: 2px solid #bba580; /* 종이 질감 느낌 테두리 */
+    border-radius: 0;
     padding: 15px 10px;
     position: relative;
     cursor: pointer;
     text-align: center;
-    transition: transform 0.1s, box-shadow 0.1s;
+    transition: transform 0.1s, box-shadow 0.1s, z-index 0s;
+    box-shadow: 3px 3px 5px rgba(0,0,0,0.3);
 }
+.student-card:nth-child(odd) { transform: rotate(-1.5deg); }
+.student-card:nth-child(even) { transform: rotate(1.5deg); }
+
+/* 의뢰서 상단 압정 장식 */
+.student-card::before {
+    content: ''; position: absolute; top: 4px; left: 50%; transform: translateX(-50%);
+    width: 8px; height: 8px; background-color: #ff006e; border-radius: 50%; border: 1px solid #000;
+    box-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+}
+
 .student-card:hover {
-    background-color: rgba(255,255,255,0.8);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+    background-color: #fff;
+    transform: scale(1.05) rotate(0deg);
+    z-index: 10;
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.4);
 }
 .student-card .student-check {
     position: absolute;
@@ -201,13 +232,20 @@ h3 { margin-top: 0; border-bottom: 2px solid var(--panel-border); padding-bottom
 
 .character-display { text-align: center; display: flex; flex-direction: column; align-items: center; }
 .character-image-container {
-    width: 180px; height: 240px; /* 카드의 실제 비율에 맞춤 */
+    width: 180px; height: 240px;
     margin: 15px 0;
     display: flex; justify-content: center; align-items: center;
     position: relative;
-    border-radius: 12px;
+    border-radius: 0; /* 픽셀 테두리 */
+    border: 4px solid var(--panel-border);
     overflow: hidden;
-    /* 기존 테두리와 배경색을 제거하여 이미지 속 말풍선(카드)이 온전히 보이도록 수정 */
+    /* 2D 게임 지형 배경 (하늘 80% + 잔디 20%) */
+    background: linear-gradient(to bottom, #87ceeb 0%, #87ceeb 80%, #5c9c38 80%, #5c9c38 100%);
+    box-shadow: inset 0 4px 0 rgba(255,255,255,0.4), inset 0 -4px 0 rgba(0,0,0,0.2), 4px 4px 0 rgba(0,0,0,0.2);
+}
+/* 잔디밭 위쪽 경계선 (픽셀 느낌) */
+.character-image-container::after {
+    content: ''; position: absolute; bottom: 20%; left: 0; width: 100%; height: 4px; background-color: #3e7323; z-index: 0;
 }
 
 .sprite {
@@ -226,27 +264,28 @@ h3 { margin-top: 0; border-bottom: 2px solid var(--panel-border); padding-bottom
 }
 .stage-badge { font-weight: bold; color: var(--panel-border); }
 
-/* EXP Bar */
+/* EXP Bar (MapleStory Style) */
 .exp-bar-container {
-    height: 35px;
+    height: 40px;
     background-color: var(--exp-bg);
-    border: 4px solid #000;
-    border-radius: 20px;
+    border: 4px solid var(--panel-border);
     position: relative; overflow: hidden;
     margin-bottom: 15px;
-    box-shadow: inset 0 3px 5px rgba(0,0,0,0.6);
+    box-shadow: inset 2px 2px 0 rgba(0,0,0,0.5), 4px 4px 0 rgba(0,0,0,0.2);
 }
 .exp-bar-fill {
     height: 100%; width: 0%;
-    background: linear-gradient(to bottom, #58d68d, #27ae60);
+    background-color: var(--exp-fill);
+    background-image: linear-gradient(180deg, rgba(255,255,255,0.3) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.3) 75%);
+    background-size: 100% 40px;
     transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: inset 0 2px 2px rgba(255,255,255,0.4);
+    box-shadow: inset -2px 0 0 rgba(0,0,0,0.2);
 }
 .exp-text {
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    text-align: center; line-height: 27px;
-    color: white; font-weight: 900; font-size: 1.1rem;
-    text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+    text-align: center; line-height: 32px;
+    color: white; font-size: 1.2rem;
+    text-shadow: 2px 2px 0 var(--panel-border), -2px -2px 0 var(--panel-border), 2px -2px 0 var(--panel-border), -2px 2px 0 var(--panel-border);
 }
 .next-unlock { text-align: center; font-weight: bold; color: #555; }
 
