@@ -1,3 +1,5 @@
+@import url('https://cdn.jsdelivr.net/gh/MonadABXY/mona-font/web/mona.css');
+
 @font-face {
     font-family: 'DosGothic';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_eight@1.0/DOSGothic.woff') format('woff');
@@ -70,6 +72,7 @@ body {
 
 .game-title {
     text-align: center;
+    font-family: 'Mona10', sans-serif;
     font-size: 3.5rem;
     color: #ffd700;
     -webkit-text-stroke: 2px #000;
