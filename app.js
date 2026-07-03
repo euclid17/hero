@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc, query, where, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { policies } from "./policies.js";
 
 // TODO: 아래에 Firebase 프로젝트 설정 정보를 붙여넣으세요!
@@ -347,6 +347,10 @@ window.app = {
                 html += `
                     <div class="student-card" onclick="const cb = document.getElementById('chk-${s.id}'); cb.checked = !cb.checked; event.stopPropagation();">
                         <input type="checkbox" id="chk-${s.id}" class="student-check" value="${s.id}" ${isChecked} onclick="event.stopPropagation();">
+                        <div style="position: absolute; top: 5px; left: 5px; display: flex; gap: 5px;">
+                            <span title="이름 변경" style="cursor: pointer; font-size: 1.1rem;" onclick="app.editStudentName('${s.id}', '${s.name}'); event.stopPropagation();">✏️</span>
+                            <span title="학생 삭제" style="cursor: pointer; font-size: 1.1rem;" onclick="app.deleteStudent('${s.id}', '${s.name}'); event.stopPropagation();">❌</span>
+                        </div>
                         <div class="student-card-name">${s.name}</div>
                         <div class="student-card-job">[${jobName}]<br>${stage.name}</div>
                         <div class="student-card-exp">${s.points} P</div>
@@ -365,6 +369,30 @@ window.app = {
 
     hideClassSetup() {
         document.getElementById('teacher-class-setup').classList.add('hidden');
+    },
+
+    async editStudentName(studentId, currentName) {
+        const newName = prompt(`'${currentName}' 학생의 새로운 이름을 입력하세요:`, currentName);
+        if (newName && newName.trim() !== '' && newName !== currentName) {
+            try {
+                await updateDoc(doc(db, "users", studentId), { name: newName.trim() });
+            } catch (e) {
+                console.error(e);
+                alert("이름 변경 중 오류가 발생했습니다.");
+            }
+        }
+    },
+
+    async deleteStudent(studentId, studentName) {
+        const conf = confirm(`정말 '${studentName}' 학생을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없으며, 학생의 모든 데이터가 삭제됩니다.`);
+        if (conf) {
+            try {
+                await deleteDoc(doc(db, "users", studentId));
+            } catch (e) {
+                console.error(e);
+                alert("학생 삭제 중 오류가 발생했습니다. 권한을 확인해주세요.");
+            }
+        }
     },
 
     toggleCheckAll() {
