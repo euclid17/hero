@@ -13,12 +13,12 @@
     --panel-border: #6a4423; /* Darker Wood */
     --panel-highlight: #e6cca5;
     
-    --btn-primary: #3498db;
-    --btn-primary-dark: #2980b9;
-    --btn-secondary: #e67e22;
-    --btn-secondary-dark: #d35400;
+    --btn-primary: #5c9c38; /* Earthy Green */
+    --btn-primary-dark: #3e7323;
+    --btn-secondary: #d79b47; /* Warm Wood/Tan */
+    --btn-secondary-dark: #b0772f;
     
-    --exp-fill: #2ecc71;
+    --exp-fill: #4caf50;
     --exp-bg: #2c3e50;
     
     --text-color: #2c3e50;
