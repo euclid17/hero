@@ -56,19 +56,30 @@
             </header>
             
             <!-- Class Management UI -->
-            <div id="teacher-class-setup" class="panel hidden" style="text-align: center; margin-bottom: 20px;">
-                <h3>내 학급 만들기</h3>
-                <p style="margin-bottom: 15px;">운영 중인 학급이 없습니다. 학급 이름을 입력하고 학생들을 초대하세요!</p>
-                <input type="text" id="new-class-name" class="input-text" placeholder="학급 이름 (예: 수리초 6학년 1반)" style="width: 80%; max-width: 300px; margin-bottom: 10px;">
-                <br>
-                <button class="btn btn-primary" onclick="app.createClass()">학급 생성 및 초대코드 발급</button>
+            <div id="teacher-class-selector-panel" class="panel hidden" style="margin-bottom: 20px; background-color: rgba(255, 215, 0, 0.1); border-color: #ffd700;">
+                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <h3 style="margin: 0; color: #d35400;">현재 학급:</h3>
+                        <select id="class-selector" class="input-text" style="font-size: 1.1rem; padding: 5px; min-width: 200px;" onchange="app.selectClass(this.value)">
+                            <!-- Options injected via JS -->
+                        </select>
+                    </div>
+                    <button class="btn btn-secondary" onclick="app.showClassSetup()">+ 새 학급 추가</button>
+                </div>
+                <div id="teacher-class-invite-info" style="margin-top: 15px;">
+                    <p style="font-size: 1.1rem; margin-bottom: 0;">
+                        가입용 초대 코드: <strong id="display-invite-code" style="font-size: 1.4rem; color: #e74c3c; user-select: all; cursor: pointer;" title="더블 클릭하여 복사"></strong>
+                    </p>
+                </div>
             </div>
 
-            <div id="teacher-class-info" class="panel hidden" style="margin-bottom: 20px; background-color: rgba(255, 215, 0, 0.1); border-color: #ffd700;">
-                <h3 id="display-class-name" style="margin-top: 0; color: #d35400;">학급 이름</h3>
-                <p style="font-size: 1.1rem; margin-bottom: 0;">
-                    가입용 초대 코드: <strong id="display-invite-code" style="font-size: 1.4rem; color: #e74c3c; user-select: all; cursor: pointer;" title="더블 클릭하여 복사"></strong>
-                </p>
+            <div id="teacher-class-setup" class="panel hidden" style="text-align: center; margin-bottom: 20px;">
+                <h3>새 학급 만들기</h3>
+                <p style="margin-bottom: 15px;">학급 이름을 입력하고 새로운 학생들을 초대할 코드를 발급받으세요.</p>
+                <input type="text" id="new-class-name" class="input-text" placeholder="학급 이름 (예: 수리초 6학년 1반)" style="width: 80%; max-width: 300px; margin-bottom: 10px;">
+                <br>
+                <button class="btn btn-primary" onclick="app.createClass()">학급 생성</button>
+                <button class="btn btn-secondary" onclick="app.hideClassSetup()" id="btn-cancel-class-setup">취소</button>
             </div>
 
             <div id="teacher-dashboard-main" class="hidden">

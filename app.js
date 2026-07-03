@@ -45,6 +45,7 @@ let teacherUnsubscribe = null;
 let currentMode = 'login'; // 'login' or 'signup'
 let targetAuthRole = null; // 'teacher' or 'student'
 let currentClassId = null; // To store teacher's class ID or student's class ID
+let teacherClasses = []; // To store list of teacher's classes
 
 // --- UI Logic ---
 window.app = {
@@ -274,36 +275,64 @@ window.app = {
         const qClass = query(collection(db, "classes"), where("teacherId", "==", currentUserData.id));
         const classDocs = await getDocs(qClass);
         
-        if (classDocs.empty) {
-            document.getElementById('teacher-class-setup').classList.remove('hidden');
-            document.getElementById('teacher-class-info').classList.add('hidden');
+        teacherClasses = [];
+        classDocs.forEach(doc => {
+            teacherClasses.push({ id: doc.id, ...doc.data() });
+        });
+        
+        if (teacherClasses.length === 0) {
+            document.getElementById('teacher-class-selector-panel').classList.add('hidden');
             document.getElementById('teacher-dashboard-main').classList.add('hidden');
+            
+            document.getElementById('teacher-class-setup').classList.remove('hidden');
+            document.getElementById('btn-cancel-class-setup').classList.add('hidden');
         } else {
-            const classDoc = classDocs.docs[0];
-            currentClassId = classDoc.id;
-            const classData = classDoc.data();
+            teacherClasses.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
             
+            const selector = document.getElementById('class-selector');
+            selector.innerHTML = '';
+            teacherClasses.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.id;
+                opt.innerText = c.className;
+                selector.appendChild(opt);
+            });
+            
+            document.getElementById('teacher-class-selector-panel').classList.remove('hidden');
             document.getElementById('teacher-class-setup').classList.add('hidden');
-            document.getElementById('teacher-class-info').classList.remove('hidden');
             document.getElementById('teacher-dashboard-main').classList.remove('hidden');
-            document.getElementById('display-class-name').innerText = classData.className;
-            document.getElementById('display-invite-code').innerText = currentClassId;
             
-            // Listen to all students in this class in real-time
-            const qStudents = query(collection(db, "users"), where("role", "==", "student"), where("classId", "==", currentClassId));
-            
-            if (studentsUnsubscribe) {
-                studentsUnsubscribe(); // Unsubscribe previous if exists
+            if (!currentClassId || !teacherClasses.find(c => c.id === currentClassId)) {
+                currentClassId = teacherClasses[0].id;
             }
+            selector.value = currentClassId;
             
-            studentsUnsubscribe = onSnapshot(qStudents, (snapshot) => {
-                if (!document.getElementById('view-teacher').classList.contains('active')) return;
+            this.selectClass(currentClassId);
+        }
+    },
 
-                const students = [];
-                snapshot.forEach(doc => {
-                    students.push({ id: doc.id, ...doc.data() });
-                });
-            
+    selectClass(classId) {
+        currentClassId = classId;
+        const cls = teacherClasses.find(c => c.id === classId);
+        if (!cls) return;
+        
+        document.getElementById('display-invite-code').innerText = classId;
+        
+        // Listen to all students in this class in real-time
+        const qStudents = query(collection(db, "users"), where("role", "==", "student"), where("classId", "==", classId));
+        
+        if (studentsUnsubscribe) {
+            studentsUnsubscribe(); // Unsubscribe previous if exists
+        }
+        
+        studentsUnsubscribe = onSnapshot(qStudents, (snapshot) => {
+            if (!document.getElementById('view-teacher').classList.contains('active')) return;
+
+            const students = [];
+            snapshot.forEach(doc => {
+                students.push({ id: doc.id, ...doc.data() });
+            });
+        
             // Save current checked state
             const checkedState = {};
             document.querySelectorAll('.student-check').forEach(el => {
@@ -324,9 +353,18 @@ window.app = {
                     </div>
                 `;
             });
-            container.innerHTML = html;
+            document.getElementById('student-rows').innerHTML = html;
         });
-        }
+    },
+    
+    showClassSetup() {
+        document.getElementById('new-class-name').value = '';
+        document.getElementById('teacher-class-setup').classList.remove('hidden');
+        document.getElementById('btn-cancel-class-setup').classList.remove('hidden');
+    },
+
+    hideClassSetup() {
+        document.getElementById('teacher-class-setup').classList.add('hidden');
     },
 
     toggleCheckAll() {
@@ -350,6 +388,8 @@ window.app = {
                 createdAt: new Date().toISOString()
             });
             alert(`학급이 생성되었습니다! 초대 코드: ${inviteCode}`);
+            // Set currentClassId to select it after reload
+            currentClassId = inviteCode;
             // Reload teacher view
             this.startTeacherListener();
         } catch (e) {
