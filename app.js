@@ -377,11 +377,11 @@ window.app = {
     },
 
     openTutorial() {
-        document.getElementById('tutorial-modal').classList.remove('hidden');
+        document.getElementById('tutorial-modal').style.display = 'block';
     },
 
     closeTutorial() {
-        document.getElementById('tutorial-modal').classList.add('hidden');
+        document.getElementById('tutorial-modal').style.display = 'none';
         if (currentUserData) {
             localStorage.setItem('tutorialSeen_' + currentUserData.id, 'true');
         }
