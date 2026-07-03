@@ -309,6 +309,11 @@ window.app = {
             
             this.selectClass(currentClassId);
         }
+
+        // Show tutorial on first login
+        if (!localStorage.getItem('tutorialSeen_' + currentUserData.id)) {
+            this.openTutorial();
+        }
     },
 
     selectClass(classId) {
@@ -369,6 +374,17 @@ window.app = {
 
     hideClassSetup() {
         document.getElementById('teacher-class-setup').classList.add('hidden');
+    },
+
+    openTutorial() {
+        document.getElementById('tutorial-modal').classList.remove('hidden');
+    },
+
+    closeTutorial() {
+        document.getElementById('tutorial-modal').classList.add('hidden');
+        if (currentUserData) {
+            localStorage.setItem('tutorialSeen_' + currentUserData.id, 'true');
+        }
     },
 
     async editStudentName(studentId, currentName) {
