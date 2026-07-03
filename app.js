@@ -439,16 +439,19 @@ window.app = {
                     let sData = studentSnap.data();
                     sData.points += amount;
                     
+                    const now = new Date();
+                    const timeStr = `[${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}]`;
+                    
                     if (sData.points >= 100) {
                         sData.points = 0;
                         sData.jobIndex = (sData.jobIndex + 1) % JOBS.length;
-                        sData.history.unshift({ time: new Date().toLocaleTimeString(), text: `🎉 [${JOBS[sData.jobIndex]}] 직업 달성!` });
+                        sData.history.unshift({ time: timeStr, text: `🎉 [${JOBS[sData.jobIndex]}] 직업 달성!` });
                     } else if (sData.points < 0) {
                         sData.points = 0;
                     }
 
                     sData.history.unshift({ 
-                        time: new Date().toLocaleTimeString(), 
+                        time: timeStr, 
                         text: `${reason} (${amount > 0 ? '+'+amount : amount}P)` 
                     });
                     
