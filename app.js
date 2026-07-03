@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { policies } from "./policies.js";
 
@@ -177,11 +177,6 @@ window.app = {
                         alert('학급 초대 코드를 입력해주세요.');
                         return;
                     }
-                    const classDoc = await getDoc(doc(db, "classes", inviteCode));
-                    if (!classDoc.exists()) {
-                        alert('유효하지 않은 초대 코드입니다. 다시 확인해주세요.');
-                        return;
-                    }
                     currentClassId = inviteCode;
                 }
 
@@ -190,6 +185,17 @@ window.app = {
 
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
+                
+                // 학생인 경우 가입 후 초대 코드가 유효한지 확인
+                // Firestore 보안 규칙상 로그인된 사용자만 읽기 권한이 있을 수 있어, 계정 생성 직후 조회함
+                if (targetAuthRole === 'student') {
+                    const classDoc = await getDoc(doc(db, "classes", currentClassId));
+                    if (!classDoc.exists()) {
+                        alert('유효하지 않은 초대 코드입니다. 확인 후 다시 가입해주세요.');
+                        await deleteUser(user);
+                        return;
+                    }
+                }
                 
                 // Create document in Firestore
                 const userData = {
