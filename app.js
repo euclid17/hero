@@ -574,6 +574,11 @@ window.app = {
     startStudentListener() {
         if (!currentUserData) return;
         
+        // Show tutorial on first login
+        if (!localStorage.getItem('studentTutorialSeen_' + currentUserData.id)) {
+            this.openStudentTutorial();
+        }
+        
         studentsUnsubscribe = onSnapshot(doc(db, "users", currentUserData.id), (docSnapshot) => {
             if (!document.getElementById('view-student').classList.contains('active')) return;
             
@@ -658,9 +663,20 @@ window.app = {
 
         const logHtml = currentUserData.history.map(h => {
             const isPos = h.text.includes('+') || h.text.includes('🎉');
-            return `<div class="log-entry ${isPos ? 'positive' : 'negative'}">[${h.time}] ${h.text}</div>`;
+            return `<div class="log-entry ${isPos ? 'positive' : 'negative'}">${h.time} ${h.text}</div>`;
         }).join('');
         document.getElementById('history-log').innerHTML = logHtml;
+    },
+
+    openStudentTutorial() {
+        document.getElementById('student-tutorial-modal').style.display = 'block';
+    },
+
+    closeStudentTutorial() {
+        document.getElementById('student-tutorial-modal').style.display = 'none';
+        if (currentUserData) {
+            localStorage.setItem('studentTutorialSeen_' + currentUserData.id, 'true');
+        }
     },
 
     // --- Modal Logic ---

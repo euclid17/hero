@@ -116,8 +116,11 @@
         <!-- View: Student Dashboard -->
         <div id="view-student" class="view">
             <header class="game-header">
-                <h2>내 상태창</h2>
-                <button class="btn btn-small" onclick="app.logout()">로그아웃</button>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <h2 style="margin: 0;">용사 대시보드</h2>
+                    <button class="btn btn-small" title="이용 안내" style="background-color: #3498db; color: white; padding: 0; border-radius: 50%; width: 30px; height: 30px; font-weight: bold; font-size: 1.1rem; display: flex; justify-content: center; align-items: center;" onclick="app.openStudentTutorial()">?</button>
+                </div>
+                <button class="btn btn-small" onclick="app.logout()">종료</button>
             </header>
 
             <div class="student-main">
@@ -197,6 +200,28 @@
             </div>
             
             <button class="btn btn-primary" style="margin-top: 20px; width: 100%; font-size: 1.2rem; padding: 12px;" onclick="app.closeTutorial()">확인 및 시작하기</button>
+        </div>
+    </div>
+
+    <!-- Student Tutorial Modal -->
+    <div id="student-tutorial-modal" class="modal">
+        <div class="modal-content" style="max-width: 600px; text-align: center;">
+            <span class="close" onclick="app.closeStudentTutorial()">&times;</span>
+            <h2 style="color: #27ae60; margin-top: 10px;">⚔️ 용사 키우기에 온 것을 환영한다! ⚔️</h2>
+            <p style="font-size: 1.05rem;">이곳은 너만의 특별한 캐릭터를 멋진 용사로 키우는 모험의 세계란다!<br>위대한 용사가 되기 위해 알아야 할 3가지 규칙을 알려줄게.</p>
+            
+            <div style="text-align: left; background: rgba(255,255,255,0.8); padding: 20px; border-radius: 8px; border: 2px solid #ddd; margin-top: 15px;">
+                <h4 style="margin-top: 0; color: #2c3e50; font-size: 1.1rem;">1. 🥚 모험의 시작과 진화</h4>
+                <p style="margin-top: 5px; font-size: 0.95rem;">너의 캐릭터는 <strong>[기사 - 마법사 - 소환사]</strong> 중 하나의 직업을 가지게 돼. 처음엔 귀여운 '알'에서 시작하지만, 포인트를 모을 때마다 <strong>[초급 → 중급 → 최종]</strong> 단계로 멋지게 진화한단다!</p>
+                
+                <h4 style="color: #2c3e50; font-size: 1.1rem; margin-top: 15px;">2. 💯 경험치 획득과 전직</h4>
+                <p style="margin-top: 5px; font-size: 0.95rem;">선생님께서 칭찬하실 때마다 경험치(P)를 얻을 수 있어. 열심히 모아서 <strong>100포인트</strong>를 채우면, 다음 직업으로 <strong>전직</strong>하면서 완전히 새로운 모습으로 다시 모험을 시작하게 돼!</p>
+                
+                <h4 style="color: #2c3e50; font-size: 1.1rem; margin-top: 15px;">3. 📜 나의 모험 기록 확인</h4>
+                <p style="margin-top: 5px; margin-bottom: 0; font-size: 0.95rem;">화면 아래쪽에 있는 <strong>'모험 기록'</strong>을 확인해 봐! 언제, 어떤 멋진 행동을 해서 포인트를 얻었는지 상세한 기록을 볼 수 있어.</p>
+            </div>
+            
+            <button class="btn btn-primary" style="background-color: #27ae60; margin-top: 20px; width: 100%; font-size: 1.2rem; padding: 12px; border-color: #1e8449;" onclick="app.closeStudentTutorial()">모험 시작하기!</button>
         </div>
     </div>
 
