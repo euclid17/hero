@@ -92,11 +92,14 @@ body {
     text-align: center;
     font-family: 'Mona10', 'NeoDunggeunmo', sans-serif;
     font-size: 3.5rem;
-    color: #ffbe0b;
-    -webkit-text-stroke: 3px var(--panel-border);
-    text-shadow: 4px 4px 0 #000;
     margin-bottom: 10px;
     font-weight: 900;
+    
+    background: linear-gradient(to bottom, #fff59d 0%, #ffeb3b 40%, #ff9800 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 3px var(--panel-border);
+    filter: drop-shadow(4px 4px 0 rgba(0,0,0,1));
 }
 
 .subtitle { text-align: center; font-size: 1.2rem; color: var(--panel-border); font-weight: bold; }
